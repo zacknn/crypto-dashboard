@@ -1,8 +1,10 @@
 import axios from "axios";
+import api from "./api";
 import { CoinMarket } from "./difinitions";
-export const getTopCoins = async (): Promise<CoinMarket[]> => {
+import {cache} from 'react';
+export const getTopCoins = cache(async (): Promise<CoinMarket[]> => {
   try {
-    const res = await axios.get<CoinMarket[]>("/coins/markets", {
+    const res = await api.get<CoinMarket[]>("/coins/markets", {
       params: {
         vs_currency: "usd",
         order: "market_cap_desc",
@@ -43,4 +45,4 @@ export const getTopCoins = async (): Promise<CoinMarket[]> => {
       throw new Error("Something went wrong.");
     }
   }
-};
+});
