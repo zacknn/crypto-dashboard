@@ -1,8 +1,12 @@
 import axios from "axios";
 
-const api = axios.create({
+export const fetchTopCoin = axios.create({
     baseURL: 'https://api.coingecko.com/api/v3',
     timeout: 10000, // 10 seconds timeout
 });
 
-export default api;
+export const fetchCoinDetail = axios.create({
+    baseURL: 'https://api.coingecko.com/api/v3',
+    timeout: 10000, // 10 seconds timeout
+});
+

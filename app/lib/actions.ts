@@ -1,10 +1,11 @@
 import axios from "axios";
-import api from "./api";
-import { CoinMarket } from "./difinitions";
+import { fetchTopCoin , fetchCoinDetail } from "./api";
+import { CoinMarket , CoinDetail } from "./difinitions";
 import {cache} from 'react';
+import { th } from "framer-motion/client";
 export const getTopCoins = cache(async (): Promise<CoinMarket[]> => {
   try {
-    const res = await api.get<CoinMarket[]>("/coins/markets", {
+    const res = await fetchTopCoin.get<CoinMarket[]>("/coins/markets", {
       params: {
         vs_currency: "usd",
         order: "market_cap_desc",
@@ -46,3 +47,24 @@ export const getTopCoins = cache(async (): Promise<CoinMarket[]> => {
     }
   }
 });
+
+export const getCoinDetails = async (id:string) : Promise<CoinDetail> => {
+  try {
+    const res = await fetchCoinDetail.get<CoinDetail>(`/coins/${id}`, {
+      params: {
+        localization: false,
+        tickers: false,
+        market_data: true,
+        community_data: false,
+        developer_data: false,
+        sparkline: false,
+      },
+    });
+    return res.data;
+  }catch (error:any){
+    console.error("Error fetching coin details:", error);
+    throw new Error("Failed to fetch coin details.");
+  }
+}
+
+

@@ -3,11 +3,14 @@ import { CoinMarket } from '../lib/difinitions';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { ArrowUpIcon, ArrowDownIcon } from '@heroicons/react/24/solid';
+import  Link  from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function CoinCard({ coin }: { coin: CoinMarket }) {
   const isPositive = coin.price_change_percentage_24h >= 0;
   
   return (
+    <div>
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -25,7 +28,7 @@ export default function CoinCard({ coin }: { coin: CoinMarket }) {
               width={40}
               height={40}
               className="w-10 h-10"
-              unoptimized={true} // Remove if you configure custom domains in next.config.js
+              unoptimized={true}
             />
             <span className="absolute -bottom-1 -right-1 bg-gray-100 dark:bg-gray-700 text-xs font-medium rounded-full px-2 py-0.5">
               #{coin.market_cap_rank}
@@ -80,6 +83,13 @@ export default function CoinCard({ coin }: { coin: CoinMarket }) {
           style={{ width: `${Math.min(Math.abs(coin.price_change_percentage_24h), 100)}%` }}
         />
       </motion.div>
+      <Link href={`/coin/${coin.id}`}>
+        <Button className="mt-4 w-full" variant="outline">
+          View Details
+        </Button>
+      </Link>
     </motion.div>
+      
+    </div>
   );
 }

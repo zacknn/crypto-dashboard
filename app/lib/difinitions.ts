@@ -49,9 +49,6 @@ export interface CoinDetail {
     };
     price_change_percentage_24h: number;
   };
-  links: {
-    homepage: string[];
-  };
 }
 
 export interface MarketChart {
@@ -78,3 +75,4 @@ export interface GlobalData {
     updated_at: number;
   };
 }
+

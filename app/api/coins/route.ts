@@ -1,6 +1,6 @@
 // app/api/coins/route.ts
 import { NextResponse } from 'next/server';
-import api from '@/app/lib/api';
+import {fetchTopCoin} from '@/app/lib/api';
 
 export const dynamic = 'force-dynamic'; // Bypass Next.js caching
 // or set revalidate for timed caching:
@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic'; // Bypass Next.js caching
 
 export async function GET() {
   try {
-    const res = await api.get("/coins/markets", {
+    const res = await fetchTopCoin.get("/coins/markets", {
       params: {
         vs_currency: "usd",
         order: "market_cap_desc",
