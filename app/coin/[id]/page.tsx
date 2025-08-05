@@ -2,7 +2,7 @@
 import React, { Suspense } from 'react';
 import { useParams } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { ArrowLeftIcon } from '@heroicons/react/24/solid';
+import { ArrowLeftIcon, HeartIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -19,7 +19,15 @@ export default function CoinDetailPage() {
   const [coin, setCoin] = React.useState<CoinDetail | null>(null);
   const [error, setError] = React.useState<string | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
+  const [isFavorite, setIsFavorite] = React.useState(false);
 
+  // Check if coin is in favorites on mount
+  React.useEffect(() => {
+    const favoriteIds = JSON.parse(localStorage.getItem('favoriteCoins') || '[]') as string[];
+    setIsFavorite(favoriteIds.includes(id));
+  }, [id]);
+
+  // Fetch coin details
   React.useEffect(() => {
     const fetchData = async () => {
       try {
@@ -34,6 +42,20 @@ export default function CoinDetailPage() {
     };
     fetchData();
   }, [id]);
+
+  // Toggle favorite status
+  const toggleFavorite = () => {
+    const favoriteIds = JSON.parse(localStorage.getItem('favoriteCoins') || '[]') as string[];
+    if (favoriteIds.includes(id)) {
+      const updatedFavorites = favoriteIds.filter((favId) => favId !== id);
+      localStorage.setItem('favoriteCoins', JSON.stringify(updatedFavorites));
+      setIsFavorite(false);
+    } else {
+      favoriteIds.push(id);
+      localStorage.setItem('favoriteCoins', JSON.stringify(favoriteIds));
+      setIsFavorite(true);
+    }
+  };
 
   if (isLoading) {
     return <Loading />;
@@ -52,7 +74,7 @@ export default function CoinDetailPage() {
           transition={{ duration: 0.5 }}
           className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border border-gray-100 dark:border-gray-700"
         >
-          {/* Header with Back Button and Coin Info */}
+          {/* Header with Back Button, Coin Info, and Favorite Button */}
           <div className="flex items-center justify-between mb-6">
             <Link href="/">
               <Button variant="ghost" className="flex items-center gap-2">
@@ -74,6 +96,14 @@ export default function CoinDetailPage() {
                 <p className="text-sm text-gray-500 dark:text-gray-400 uppercase">{coin.symbol}</p>
               </div>
             </div>
+            <Button
+              variant="outline"
+              className={`flex items-center gap-2 ${isFavorite ? 'text-red-500 border-red-500' : ''}`}
+              onClick={toggleFavorite}
+            >
+              <HeartIcon className="h-5 w-5" />
+              {isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
+            </Button>
           </div>
 
           {/* Price and Market Data */}
